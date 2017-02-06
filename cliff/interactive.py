@@ -44,7 +44,10 @@ class InteractiveApp(cmd2.Cmd):
     def __init__(self, parent_app, command_manager, stdin, stdout):
         self.parent_app = parent_app
         if not hasattr(sys.stdin, 'isatty') or sys.stdin.isatty():
-            self.prompt = '(%s) ' % parent_app.NAME
+            if cmd2.os.environ.get('OS_PROJECT_NAME'):
+                self.prompt = '(%s project:%s) ' % (parent_app.NAME, cmd2.os.environ.get('OS_PROJECT_NAME'))
+            else:
+                self.prompt = '(%s) ' % parent_app.NAME
         else:
             # batch/pipe mode
             self.prompt = ''
